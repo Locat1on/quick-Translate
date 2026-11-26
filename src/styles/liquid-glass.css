@@ -1,0 +1,397 @@
+/* Apple Liquid Glass surface & control layer */
+
+.lg-window-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.lg-surface {
+  position: relative;
+  border-radius: var(--radius-window);
+  background: var(--lg-window-bg);
+  box-shadow: var(--lg-inner-shadow);
+  overflow: hidden;
+  --mx: 50%;
+  --my: 0%;
+}
+
+/* Specular 3D beveled rim highlight */
+.lg-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    145deg,
+    var(--lg-rim-top) 0%,
+    var(--lg-rim-mid) 35%,
+    var(--lg-rim-mid) 65%,
+    var(--lg-rim-bottom) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Dynamic cursor-tracking specular sheen */
+.lg-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--mx) var(--my),
+    var(--lg-sheen) 0%,
+    transparent 62%
+  );
+  opacity: 0.32;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 1;
+}
+
+.lg-surface > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Capsule Button (Liquid Glass control layer) */
+.lg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 31px;
+  padding: 0 13px;
+  border-radius: var(--radius-pill);
+  border: 0.5px solid var(--lg-rim-mid);
+  background: var(--lg-control-bg);
+  color: var(--lg-text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 var(--lg-rim-top), 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.lg-btn:hover:not(:disabled) {
+  background: var(--lg-control-hover);
+  transform: translateY(-0.5px) scale(1.03);
+}
+
+.lg-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.lg-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lg-btn--icon {
+  width: 31px;
+  padding: 0;
+}
+
+.lg-btn--primary {
+  background: var(--lg-accent-glass);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 3px 12px rgba(0, 122, 255, 0.28);
+}
+
+.lg-btn--primary:hover:not(:disabled) {
+  background: var(--lg-accent);
+}
+
+.lg-btn--danger {
+  color: var(--lg-danger);
+}
+
+/* Segmented Control (Apple sliding liquid pill switcher) */
+.lg-segmented {
+  position: relative;
+  display: inline-grid;
+  align-items: center;
+  padding: 2.5px;
+  border-radius: var(--radius-pill);
+  background: var(--lg-control-bg);
+  border: 0.5px solid var(--lg-rim-mid);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.lg-segmented-thumb {
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  bottom: 2.5px;
+  border-radius: var(--radius-pill);
+  background: var(--lg-thumb-bg);
+  box-shadow:
+    inset 0 1px 0 var(--lg-rim-top),
+    0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 320ms cubic-bezier(0.32, 1.24, 0.58, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lg-segmented-item {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  color: var(--lg-text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 13px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 200ms ease, transform 140ms ease;
+}
+
+.lg-segmented-item:active {
+  transform: scale(0.94);
+}
+
+.lg-segmented-item[data-active="true"] {
+  color: var(--lg-text-primary);
+  font-weight: 600;
+}
+
+/* Crisp readable content layer */
+.lg-content-well {
+  border-radius: var(--radius-card);
+  background: var(--lg-content-bg);
+  color: var(--lg-text-primary);
+  border: 0.5px solid var(--lg-rim-mid);
+  box-shadow:
+    inset 0 1px 0 var(--lg-rim-top),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  user-select: text;
+  min-height: 0;
+}
+
+/* macOS System Settings inset grouped container */
+.lg-group {
+  flex-shrink: 0;
+  border-radius: var(--radius-card);
+  background: var(--lg-group-bg);
+  border: 0.5px solid var(--lg-rim-mid);
+  box-shadow:
+    inset 0 1px 0 var(--lg-rim-top),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.lg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 9px 15px;
+}
+
+.lg-row + .lg-row {
+  border-top: 0.5px solid var(--lg-divider);
+}
+
+.lg-row-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--lg-text-primary);
+  white-space: nowrap;
+}
+
+.lg-row-control {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Subtle Apple-style inline input & select */
+.lg-input,
+.lg-select {
+  width: 100%;
+  height: 34px;
+  padding: 0 11px;
+  border-radius: 10px;
+  border: 0.5px solid transparent;
+  background: var(--lg-input-bg);
+  color: var(--lg-text-primary);
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.lg-input:focus,
+.lg-select:focus {
+  border-color: var(--lg-accent);
+  box-shadow: 0 0 0 3px var(--lg-accent-soft);
+}
+
+.lg-select {
+  appearance: none;
+  padding-right: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  cursor: pointer;
+}
+
+/* Native macOS-style pill toggle switch */
+.lg-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 38px;
+  height: 22px;
+  padding: 2px;
+  border-radius: 9999px;
+  border: none;
+  background: var(--lg-input-bg);
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.lg-switch[data-checked="true"] {
+  background: var(--lg-success);
+}
+
+.lg-switch-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lg-switch[data-checked="true"] .lg-switch-thumb {
+  transform: translateX(16px);
+}
+
+/* Streaming pulse dot */
+@keyframes lg-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+
+.lg-dot-live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lg-success);
+  animation: lg-pulse 1.2s ease-in-out infinite;
+}
+
+/* React Bits SpotlightCard overlay */
+.rb-spotlight-card {
+  position: relative;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-opacity: 0;
+  --spot-color: rgba(255, 255, 255, 0.14);
+}
+
+.rb-spotlight-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--spot-x) var(--spot-y),
+    var(--spot-color),
+    transparent 70%
+  );
+  opacity: var(--spot-opacity);
+  pointer-events: none;
+  transition: opacity 240ms ease;
+  z-index: 1;
+}
+
+.rb-spotlight-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* React Bits BlurText reveal (compositor-friendly opacity + translate) */
+@keyframes rb-blur-in {
+  0% {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rb-blur-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.rb-blur-char {
+  display: inline-block;
+  opacity: 0;
+  animation: rb-blur-in 360ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* iOS/macOS spring entrance & liquid shimmer */
+@keyframes lg-spring-in {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.97) translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.lg-spring-enter {
+  animation: lg-spring-in 240ms cubic-bezier(0.22, 1.16, 0.36, 1) both;
+}
+
+@keyframes lg-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.lg-shimmer-bar {
+  height: 10px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    var(--lg-input-bg) 20%,
+    var(--lg-accent-soft) 50%,
+    var(--lg-input-bg) 80%
+  );
+  background-size: 200% 100%;
+  animation: lg-shimmer 1.5s ease-in-out infinite;
+}
